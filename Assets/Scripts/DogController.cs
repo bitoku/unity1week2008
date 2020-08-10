@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,8 +18,12 @@ public class DogController : MonoBehaviour
     void Update()
     {
         if (!_cursor.IsEnabled()) return;
-        Vector3 direction = (_cursor.transform.position - transform.position).normalized * speed;
-        Debug.Log(direction);
+        Vector3 diff = _cursor.transform.position - transform.position;
+        if (diff.magnitude < 0.005)
+        {
+            _cursor.DisableMove();
+        }
+        Vector3 direction = diff.normalized * speed;
         transform.Translate(direction);
     }
 }

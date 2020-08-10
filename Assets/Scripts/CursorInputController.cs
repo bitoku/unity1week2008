@@ -7,12 +7,14 @@ public class CursorInputController : MonoBehaviour
 {
     private Camera _camera;
     private bool _enable;
+    private SpriteRenderer _spriteRenderer;
     
     // Start is called before the first frame update
     void Start()
     {
         _camera = Camera.main;
-        _enable = false;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        DisableMove();
     }
 
     // Update is called once per frame
@@ -59,15 +61,33 @@ public class CursorInputController : MonoBehaviour
     void EnableMove()
     {
         _enable = true;
+        Intransparency();
     }
 
-    void DisableMove()
+    public void DisableMove()
     {
         _enable = false;
+        Transparency();
     }
 
     public bool IsEnabled()
     {
         return _enable;
+    }
+
+    private void Transparency()
+    {
+        var material = _spriteRenderer.material;
+        var c = material.color;
+        c.a = 0f;
+        material.color = c;
+    }
+
+    private void Intransparency()
+    {
+        var material = _spriteRenderer.material;
+        var c = material.color;
+        c.a = 1f;
+        material.color = c;
     }
 }
