@@ -1,25 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static int SheepNumber;
-    public static int Score;
-    
+    private int _score;
+    private List<GameObject> _sheep;
+    private float _elapsedTime;
+    private readonly int _scoreInterval = 1;
+
     // Start is called before the first frame update
     void Awake()
     {
-        SheepNumber = 0;
-        Score = 0;
+        _sheep = new List<GameObject>();
+        _score = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //羊の数を取得する
-        
-        //得点計算
-        
+        _elapsedTime += Time.deltaTime;
+        if (_elapsedTime > _scoreInterval)
+        {
+            _score += SheepNumber();
+            _elapsedTime = 0;
+        }
+    }
+
+    public void AddSheep(GameObject sheep)
+    {
+        _sheep.Add(sheep);
+    }
+
+    public int SheepNumber()
+    {
+        return _sheep.Count;
+    }
+
+    public int GetScore()
+    {
+        return _score;
     }
 }
