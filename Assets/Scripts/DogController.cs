@@ -19,7 +19,7 @@ public class DogController : MonoBehaviour
     {
         if (!_cursor.IsEnabled()) return;
         Vector3 diff = _cursor.transform.position - transform.position;
-        if (diff.magnitude < 0.005)
+        if (diff.magnitude < 0.01)
         {
             _cursor.DisableMove();
         }
