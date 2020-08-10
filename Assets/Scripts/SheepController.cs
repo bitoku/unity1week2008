@@ -6,13 +6,12 @@ public class SheepController : MonoBehaviour
 {
     // Start is called before the first frame update
     private Vector2 _direction;
-    private float _speed;
+    [SerializeField] private float speed;
     [SerializeField] private float changeRate;
     
     void Start()
     {
         _direction = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-        _speed = 0.003f;
     }
 
     private void ChangeDirection()
@@ -25,8 +24,7 @@ public class SheepController : MonoBehaviour
     void Update()
     {
         ChangeDirection();
-        Vector3 direction3 = _speed * _direction;
+        Vector3 direction3 = speed * _direction;
         transform.Translate(direction3);
-        Debug.Log(_direction);
     }
 }
