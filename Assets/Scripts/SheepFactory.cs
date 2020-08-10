@@ -9,11 +9,13 @@ public class SheepFactory : MonoBehaviour
     [SerializeField] private float interval;
     private float _timeElapsed;
     private GameObject _sheep;
+    private GameManager _gameManager;
     
     // Start is called before the first frame update
     void Start()
     {
         _sheep = (GameObject) Resources.Load("Sheep");
+        _gameManager = FindObjectOfType<GameManager>();
         StartFactory();
     }
 
@@ -35,8 +37,14 @@ public class SheepFactory : MonoBehaviour
         _timeElapsed += Time.deltaTime;
         if (_timeElapsed > interval)
         {
-            Instantiate(_sheep, Vector3.zero, Quaternion.identity);
+            CreateSheep();
             _timeElapsed = 0f;
         }
+    }
+
+    private void CreateSheep()
+    {
+        var sheep = Instantiate(_sheep, Vector3.zero, Quaternion.identity);
+        _gameManager.AddSheep(sheep);
     }
 }
