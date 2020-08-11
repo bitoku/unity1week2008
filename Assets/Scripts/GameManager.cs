@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     private int _score;
     private List<GameObject> _sheep;
     private float _elapsedTime;
-    private readonly int _scoreInterval = 1;
+    private const int ScoreInterval = 1;
 
     // Start is called before the first frame update
     void Awake()
@@ -21,11 +21,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         _elapsedTime += Time.deltaTime;
-        if (_elapsedTime > _scoreInterval)
-        {
-            _score += SheepNumber();
-            _elapsedTime = 0;
-        }
+        if (!(_elapsedTime > ScoreInterval)) return;
+        _score += SheepNumber();
+        _elapsedTime = 0;
     }
 
     public void AddSheep(GameObject sheep)

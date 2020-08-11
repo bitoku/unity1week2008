@@ -620,7 +620,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cursor
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2558041388006711091, guid: a1b114b72b2bc4b34a2424ef02400957, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a1b114b72b2bc4b34a2424ef02400957, type: 3}
 --- !u!1001 &3938365136740385952
 PrefabInstance:
