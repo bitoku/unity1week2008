@@ -13,7 +13,8 @@ public class CursorInputController : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        var circle = GameObject.Find("CursorCircle");
+        _spriteRenderer = circle.GetComponent<SpriteRenderer>();
         DisableMove();
     }
 

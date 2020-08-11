@@ -9,12 +9,14 @@ public class GameManager : MonoBehaviour
     private List<GameObject> _sheep;
     private float _elapsedTime;
     private const int ScoreInterval = 1;
+    private bool _isPlaying;
 
     // Start is called before the first frame update
     void Awake()
     {
         _sheep = new List<GameObject>();
         _score = 0;
+        _isPlaying = true;
     }
 
     // Update is called once per frame
@@ -22,7 +24,7 @@ public class GameManager : MonoBehaviour
     {
         _elapsedTime += Time.deltaTime;
         if (!(_elapsedTime > ScoreInterval)) return;
-        _score += SheepNumber();
+        if (CanScore()) _score += SheepNumber();
         _elapsedTime = 0;
     }
 
@@ -39,5 +41,15 @@ public class GameManager : MonoBehaviour
     public int GetScore()
     {
         return _score;
+    }
+
+    private bool CanScore()
+    {
+        return _isPlaying;
+    }
+
+    public void StopPlaying()
+    {
+        _isPlaying = false;
     }
 }

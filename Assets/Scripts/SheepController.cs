@@ -8,6 +8,7 @@ public class SheepController : MonoBehaviour
     // Start is called before the first frame update
     private Vector2 _direction;
     private DogController _dog;
+    private GameManager _gameManager;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float changeRate;
@@ -17,6 +18,7 @@ public class SheepController : MonoBehaviour
     {
         _direction = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * minSpeed;
         _dog = FindObjectOfType<DogController>();
+        _gameManager = FindObjectOfType<GameManager>();
     }
 
     // Update is called once per frame
@@ -52,6 +54,7 @@ public class SheepController : MonoBehaviour
     {
         if (((Vector2) transform.position).magnitude < 4.9f) return;
         Destroy(gameObject);
+        _gameManager.StopPlaying();
     }
     
 }
