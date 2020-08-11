@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
@@ -20,14 +21,17 @@ public class SheepController : MonoBehaviour
     private DogController _dog;
     private GameManager _gameManager;
     private State _state;
+    private float _speed;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
-    [SerializeField] private float changeRate;
+    [SerializeField] private float changeDirectionRate;
+    [SerializeField] private float changeSpeedRate;
     [SerializeField] private float restitution;
 
     void Start()
     {
-        _direction = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * minSpeed;
+        _direction = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
+        _speed = minSpeed;
         _dog = FindObjectOfType<DogController>();
         _gameManager = FindObjectOfType<GameManager>();
         _state = State.Free;
@@ -37,15 +41,18 @@ public class SheepController : MonoBehaviour
     void Update()
     {
         ChangeState();
-        ChangeDirection();
-        var direction3 = Vector3.ClampMagnitude(_direction, maxSpeed);
-        transform.Translate(direction3);
+        ChangeMoveParams();
+        transform.Translate(_direction * _speed);
     }
 
     private void ChangeState()
     {
         var distance = (_dog.transform.position - transform.position).magnitude;
-        if (distance < 1f)
+        if (transform.position.magnitude > 4.9f)
+        {
+            TransitionState(State.Stop);
+        }
+        else if (distance < 1f)
         {
             TransitionState(State.Chased);
         }
@@ -53,36 +60,63 @@ public class SheepController : MonoBehaviour
         {
             TransitionState(State.Free);
         }
-        else if (transform.position.magnitude > 4.9f)
-        {
-            TransitionState(State.Stop);
-        }
     }
 
     private void TransitionState(State toState)
     {
         var fromState = _state;
         _state = toState;
-        if (fromState == State.Chased && toState == State.Free)
+        switch (fromState)
         {
-            Vector2 edgeVector = transform.position.normalized;
-            var randomVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-            _direction = (edgeVector + randomVector).normalized * minSpeed;
+            case State.Chased:
+            {
+                if (toState == State.Free)
+                {
+                    Vector2 edgeVector = transform.position.normalized;
+                    var randomVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
+                    _direction = (edgeVector + randomVector).normalized;
+                }
+                break;
+            }
+            case State.Stop:
+                break;
+            case State.Free:
+                break;
+            case State.Die:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    private void ChangeDirection()
+    private void ChangeMoveParams()
     {
-        if (_state == State.Chased)
+        switch (_state)
         {
-            var vecFromDog = transform.position - _dog.transform.position;
-            var r = vecFromDog.magnitude + 0.01f;
-            _direction = Vector2.ClampMagnitude(_direction + restitution * (Vector2) vecFromDog.normalized / (r * r), maxSpeed);
-        }
-        else if (_state == State.Free)
-        {
-            var randomVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-            _direction = Vector2.ClampMagnitude(_direction + changeRate * randomVector, maxSpeed);
+            case State.Chased:
+            {
+                _speed = maxSpeed;
+                
+                var vecFromDog = transform.position - _dog.transform.position;
+                _direction = (_direction + restitution * (Vector2) vecFromDog.normalized).normalized;
+                break;
+            }
+            case State.Free:
+            {
+                _speed += Random.Range(-changeSpeedRate, changeSpeedRate) * minSpeed;
+                _speed = Math.Min(Math.Max(_speed, minSpeed), maxSpeed);
+                
+                var randomVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
+                _direction = (_direction + changeDirectionRate * randomVector).normalized;
+                break;
+            }
+            case State.Stop:
+                _speed = 0;
+                break;
+            case State.Die:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 }
