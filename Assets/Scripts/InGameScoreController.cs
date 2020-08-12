@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreText : MonoBehaviour
+public class InGameScoreController : MonoBehaviour
 {
     private GameManager _gameManager;
     private Text _text;
