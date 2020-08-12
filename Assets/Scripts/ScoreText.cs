@@ -8,18 +8,32 @@ public class ScoreText : MonoBehaviour
 {
     private GameManager _gameManager;
     private Text _text;
+    private int _displayedScore;
+    private float _elapsedTimeAfterChange;
 
     void Start()
     {
         _gameManager = FindObjectOfType<GameManager>();
         _text = GetComponent<Text>();
-
+        _displayedScore = 0;
     }
     // Update is called once per frame
     void Update()
     {
-        var sheepNumber = _gameManager.SheepNumber();
-        var score = _gameManager.GetScore();
-        _text.text = $"羊の数: {sheepNumber}\nスコア: {score}";
+        DisplayScore(_gameManager.SheepNumber(), _gameManager.GetScore());
+    }
+
+    private void DisplayScore(int sheepNumber, int score)
+    {
+        if (score > _displayedScore && _elapsedTimeAfterChange > 0.03f)
+        {
+            _elapsedTimeAfterChange = 0;
+            _displayedScore += 1;
+            _text.text = $"ヒツジ: {sheepNumber}\nスコア: {_displayedScore}";
+        }
+        else
+        {
+            _elapsedTimeAfterChange += Time.deltaTime;
+        }
     }
 }

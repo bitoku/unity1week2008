@@ -13,7 +13,8 @@ public class CursorInputController : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        var circle = GameObject.Find("CursorCircle");
+        _spriteRenderer = circle.GetComponent<SpriteRenderer>();
         DisableMove();
     }
 
@@ -22,25 +23,15 @@ public class CursorInputController : MonoBehaviour
     {
         if (!IsTouch()) return;
         EnableMove();
-        Vector2 screenPos = TouchPos();
-        Vector3 worldPos = _camera.ScreenToWorldPoint((Vector3) screenPos);
+        var screenPos = TouchPos();
+        var worldPos = _camera.ScreenToWorldPoint((Vector3) screenPos);
         worldPos.z = 0;
         transform.position = worldPos;
     }
 
     private static bool IsTouch()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            return true;
-        }
-
-        if (Input.touchCount > 0)
-        {
-            return true;
-        }
-
-        return false;
+        return Input.GetMouseButtonDown(0) || Input.touchCount > 0;
     }
 
     private static Vector2 TouchPos()

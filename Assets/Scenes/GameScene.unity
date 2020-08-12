@@ -477,7 +477,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 8519ca48ebf4f468ebcba6704b8ccb6f, type: 3}
     m_FontSize: 24
     m_FontStyle: 0
     m_BestFit: 0
@@ -489,7 +489,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ScoreText
+  m_Text: "\u30D2\u30C4\u30B8\uFF1A\n\u30B9\u30B3\u30A2\uFF1A"
 --- !u!222 &1411723643
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -619,6 +619,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Cursor
+      objectReference: {fileID: 0}
+    - target: {fileID: 2558041388006711093, guid: a1b114b72b2bc4b34a2424ef02400957,
+        type: 3}
+      propertyPath: m_Name
+      value: CursorCircle
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1b114b72b2bc4b34a2424ef02400957, type: 3}
