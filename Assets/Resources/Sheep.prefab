@@ -100,7 +100,7 @@ MonoBehaviour:
   changeDirectionRate: 0.2
   changeSpeedRate: 0.1
   restitution: 0.05
-  dieTime: 0
+  dieTime: 3
 --- !u!1001 &1717752345094098513
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -111,7 +111,7 @@ PrefabInstance:
     - target: {fileID: 6292763044006045606, guid: a7759187caebc42c2baaf68fabc4dc9d,
         type: 3}
       propertyPath: m_Name
-      value: Sheep_stop_1024
+      value: SheepWithAnimation
       objectReference: {fileID: 0}
     - target: {fileID: 6292763044006045611, guid: a7759187caebc42c2baaf68fabc4dc9d,
         type: 3}

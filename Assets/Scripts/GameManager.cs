@@ -54,5 +54,9 @@ public class GameManager : MonoBehaviour
     {
         _sheepFactory.StopFactory();
         _isPlaying = false;
+        foreach (var sheep in _sheep)
+        {
+            sheep.GetComponent<SheepController>().Stop();
+        }
     }
 }

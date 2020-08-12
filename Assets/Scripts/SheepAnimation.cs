@@ -6,49 +6,63 @@ public class SheepAnimation : MonoBehaviour
 {
     private enum SheepState
     {
-        Walking,
-        Stop,
-        Jump
+        Walking = 0,
+        Stop = 1,
+        Jump = 2
     }
     private SheepState _sheepState;
-    Animator sheep_Animator;
+    private Animator _sheepAnimator;
 
     // Start is called before the first frame update
     void Start()
     {
-        sheep_Animator = GetComponent<Animator>();
+        _sheepAnimator = GetComponent<Animator>();
 
         //最初はWalkingしてる
         _sheepState = SheepState.Walking;
-        sheep_Animator.SetInteger("SheepState", (int)SheepState.Walking);
+        _sheepAnimator.SetInteger("SheepState", (int)SheepState.Walking);
     }
 
-
-    public void SheepAnimationMaster(int SheepStateNumber)
+    public void WalkingAnimation()
     {
-        if (SheepStateNumber == (int)SheepState.Walking)
+        _sheepAnimator.SetInteger("SheepState", (int)SheepState.Walking);
+    }
+
+    public void JumpAnimation()
+    {
+        _sheepAnimator.SetInteger("SheepState", (int)SheepState.Jump);
+    }
+    
+    public void StopAnimation()
+    {
+        _sheepAnimator.SetInteger("SheepState", (int)SheepState.Stop);
+    }
+
+    public void ChangeAnimation(int sheepStateNumber)
+    {
+        if (sheepStateNumber == (int)SheepState.Walking)
         {
             //Walking
             _sheepState = SheepState.Walking;
-            sheep_Animator.SetInteger("SheepState", (int)SheepState.Walking);
+            _sheepAnimator.SetInteger("SheepState", (int)SheepState.Walking);
         }
-        else if (SheepStateNumber == (int)SheepState.Stop)
+        else if (sheepStateNumber == (int)SheepState.Stop)
         {
             //Stop
             _sheepState = SheepState.Stop;
-            sheep_Animator.SetInteger("SheepState", (int)SheepState.Stop);
+            _sheepAnimator.SetInteger("SheepState", (int)SheepState.Stop);
         }
-        else if (SheepStateNumber == (int)SheepState.Jump)
+        else if (sheepStateNumber == (int)SheepState.Jump)
         {
             //Jump
             _sheepState = SheepState.Jump;
-            sheep_Animator.SetInteger("SheepState", (int)SheepState.Jump);
+            _sheepAnimator.SetInteger("SheepState", (int)SheepState.Jump);
         }
         else
         {
             Debug.LogWarning("羊の状態が分かりません。とりあえず歩かせます。");
             _sheepState = SheepState.Walking;
-            sheep_Animator.SetInteger("SheepState", (int)SheepState.Walking);
+            _sheepAnimator.SetInteger("SheepState", (int)SheepState.Walking);
         }
     }
 

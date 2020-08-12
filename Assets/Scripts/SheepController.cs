@@ -12,6 +12,7 @@ public class SheepController : MonoBehaviour
         Chased,
         Stop,
         Run,
+        Die,
     }
     
     private Vector2 _direction;
@@ -20,6 +21,7 @@ public class SheepController : MonoBehaviour
     private State _state;
     private float _speed;
     private float _dieTimer;
+    private SheepAnimation _sheepAnimation;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float changeDirectionRate;
@@ -34,11 +36,14 @@ public class SheepController : MonoBehaviour
         _dog = FindObjectOfType<DogController>();
         _gameManager = FindObjectOfType<GameManager>();
         _state = State.Free;
+        var sheepWithAnimation = gameObject.transform.Find("SheepWithAnimation");
+        _sheepAnimation = sheepWithAnimation.GetComponent<SheepAnimation>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (_state == State.Die) return;
         ChangeState();
         ChangeMoveParams();
         CountDieTimer();
@@ -81,9 +86,16 @@ public class SheepController : MonoBehaviour
             case State.Chased:
                 break;
             case State.Stop:
-                _dieTimer = 0;
+                if (fromState != State.Stop)
+                {
+                    _sheepAnimation.StopAnimation();
+                    _dieTimer = 0;
+                }
                 break;
             case State.Run:
+                if (fromState != State.Run) _sheepAnimation.WalkingAnimation();
+                break;
+            case State.Die:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -129,18 +141,20 @@ public class SheepController : MonoBehaviour
 
     private void CountDieTimer()
     {
-        if (_state == State.Stop)
-        {
-            _dieTimer += Time.deltaTime;
-            if (_dieTimer > dieTime)
-            {
-                Die();
-            }
-        }
+        if (_state != State.Stop) return;
+        _dieTimer += Time.deltaTime;
+        if (_dieTimer < dieTime) return;
+        Jump();
     }
 
-    private void Die()
+    private void Jump()
     {
+        _sheepAnimation.JumpAnimation();
         _gameManager.GameOver();
+    }
+
+    public void Stop()
+    {
+        TransitionState(State.Die);
     }
 }
