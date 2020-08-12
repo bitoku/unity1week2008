@@ -24,7 +24,7 @@ public class SheepController : MonoBehaviour
     private float _speed;
     private float _dieTimer;
     private SheepAnimation _sheepAnimation;
-    private const float JumpSpeed = 0.003f;
+    private const float JumpSpeed = 0.01f;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float changeDirectionRate;
@@ -46,6 +46,12 @@ public class SheepController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_state == State.Rotate)
+        {
+            transform.Rotate(new Vector3(0, 0, 1), 5);
+            transform.localScale *= 0.99f;
+            return;
+        }
         if (_state == State.Jump)
         {
             _direction = ((Vector2) transform.position).normalized;
