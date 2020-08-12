@@ -84,7 +84,7 @@ public class SheepController : MonoBehaviour
         {
             TransitionState(State.Stop);
         }
-        else if (distance < 1f)
+        else if (distance < 1.5f)
         {
             TransitionState(State.Chased);
         }
