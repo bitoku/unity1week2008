@@ -2,5 +2,5 @@
 
 ## Font license
 This game uses `コーポレート・ロゴ（ラウンド）` font.
-The font is distributed with SIL Open Font License1.1.
+The font is distributed under SIL Open Font License 1.1.
 All rights regarding to the font belongs to [logotype](https://logotype.jp/)
