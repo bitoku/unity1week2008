@@ -29,7 +29,7 @@ public class ScoreText : MonoBehaviour
         {
             _elapsedTimeAfterChange = 0;
             _displayedScore += 1;
-            _text.text = $"The number of sheep: {sheepNumber}\nScore: {_displayedScore}";
+            _text.text = $"ヒツジ: {sheepNumber}\nスコア: {_displayedScore}";
         }
         else
         {
