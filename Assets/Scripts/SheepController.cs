@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
 public class SheepController : MonoBehaviour
@@ -14,7 +11,7 @@ public class SheepController : MonoBehaviour
         Free,
         Chased,
         Stop,
-        Die,
+        Run,
     }
     
     private Vector2 _direction;
@@ -22,11 +19,13 @@ public class SheepController : MonoBehaviour
     private GameManager _gameManager;
     private State _state;
     private float _speed;
+    private float _dieTimer;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float changeDirectionRate;
     [SerializeField] private float changeSpeedRate;
     [SerializeField] private float restitution;
+    [SerializeField] private float dieTime;
 
     void Start()
     {
@@ -42,13 +41,22 @@ public class SheepController : MonoBehaviour
     {
         ChangeState();
         ChangeMoveParams();
+        CountDieTimer();
         transform.Translate(_direction * _speed);
     }
 
     private void ChangeState()
     {
         var distance = (_dog.transform.position - transform.position).magnitude;
-        if (transform.position.magnitude > 4.9f)
+        if (_state == State.Stop && distance < 0.5f)
+        {
+            TransitionState(State.Run);
+        }
+        else if (_state == State.Run && transform.position.magnitude > 4.2f)
+        {
+            return;
+        }
+        else if (transform.position.magnitude > 4.9f)
         {
             TransitionState(State.Stop);
         }
@@ -66,23 +74,16 @@ public class SheepController : MonoBehaviour
     {
         var fromState = _state;
         _state = toState;
-        switch (fromState)
+        switch (_state)
         {
-            case State.Chased:
-            {
-                if (toState == State.Free)
-                {
-                    Vector2 edgeVector = transform.position.normalized;
-                    var randomVector = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
-                    _direction = (edgeVector + randomVector).normalized;
-                }
-                break;
-            }
-            case State.Stop:
-                break;
             case State.Free:
                 break;
-            case State.Die:
+            case State.Chased:
+                break;
+            case State.Stop:
+                _dieTimer = 0;
+                break;
+            case State.Run:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -111,12 +112,35 @@ public class SheepController : MonoBehaviour
                 break;
             }
             case State.Stop:
+            {
                 _speed = 0;
                 break;
-            case State.Die:
+            }
+            case State.Run:
+            {
+                _speed = maxSpeed;
+                _direction = (-transform.position).normalized;
                 break;
+            }
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private void CountDieTimer()
+    {
+        if (_state == State.Stop)
+        {
+            _dieTimer += Time.deltaTime;
+            if (_dieTimer > dieTime)
+            {
+                Die();
+            }
+        }
+    }
+
+    private void Die()
+    {
+        _gameManager.GameOver();
     }
 }

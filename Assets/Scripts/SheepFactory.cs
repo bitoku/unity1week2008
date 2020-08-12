@@ -25,7 +25,7 @@ public class SheepFactory : MonoBehaviour
         _timeElapsed = 0f;
     }
 
-    private void StopFactory()
+    public void StopFactory()
     {
         _canFactory = false;
     }
