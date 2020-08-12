@@ -13,6 +13,8 @@ public class SheepController : MonoBehaviour
         Stop,
         Run,
         Die,
+        Jump,
+        Rotate,
     }
     
     private Vector2 _direction;
@@ -22,6 +24,7 @@ public class SheepController : MonoBehaviour
     private float _speed;
     private float _dieTimer;
     private SheepAnimation _sheepAnimation;
+    private const float JumpSpeed = 0.003f;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float changeDirectionRate;
@@ -43,6 +46,16 @@ public class SheepController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_state == State.Jump)
+        {
+            _direction = ((Vector2) transform.position).normalized;
+            transform.Translate(_direction * JumpSpeed);
+            if (transform.position.magnitude > 6f)
+            {
+                TransitionState(State.Rotate);
+            }
+            return;
+        }
         if (_state == State.Die) return;
         ChangeState();
         ChangeMoveParams();
@@ -97,8 +110,10 @@ public class SheepController : MonoBehaviour
                 break;
             case State.Die:
                 break;
+            case State.Jump:
+                break;
             default:
-                throw new ArgumentOutOfRangeException();
+                break;
         }
     }
 
@@ -150,11 +165,12 @@ public class SheepController : MonoBehaviour
     private void Jump()
     {
         _sheepAnimation.JumpAnimation();
+        TransitionState(State.Jump);
         _gameManager.GameOver();
     }
 
     public void Stop()
     {
-        TransitionState(State.Die);
+        if (_state != State.Jump) TransitionState(State.Die);
     }
 }
