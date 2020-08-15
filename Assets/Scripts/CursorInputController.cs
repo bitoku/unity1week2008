@@ -8,12 +8,15 @@ public class CursorInputController : MonoBehaviour
     private Camera _camera;
     private bool _enable;
     private CursorSpriteController _cursorSpriteController;
+    private float _fieldRadius;
     
     // Start is called before the first frame update
     void Start()
     {
         _camera = Camera.main;
         _cursorSpriteController = FindObjectOfType<CursorSpriteController>();
+        var fieldCircle = GameObject.Find("FieldCircle");
+        _fieldRadius = fieldCircle.GetComponent<SpriteRenderer>().bounds.size.x / 2;
         DisableMove();
     }
 
@@ -21,10 +24,11 @@ public class CursorInputController : MonoBehaviour
     void Update()
     {
         if (!IsTouch()) return;
-        EnableMove();
         var screenPos = TouchPos();
-        var worldPos = _camera.ScreenToWorldPoint((Vector3) screenPos);
+        var worldPos = _camera.ScreenToWorldPoint(screenPos);
+        if (((Vector2) worldPos).magnitude > _fieldRadius) return;
         worldPos.z = 10;
+        EnableMove();
         transform.position = worldPos;
     }
 
