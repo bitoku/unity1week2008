@@ -7,11 +7,13 @@ public class DogController : MonoBehaviour
 {
     private enum State
     {
-        Move,
+        Run,
         Stop,
+        Die,
     }
 
     private State _state;
+    private DogAnimation _dogAnimation;
     [SerializeField] private float speed;
 
     private CursorInputController _cursor;
@@ -19,25 +21,42 @@ public class DogController : MonoBehaviour
     void Start()
     {
         _cursor = FindObjectOfType<CursorInputController>();
-        _state = State.Move;
+        _dogAnimation = FindObjectOfType<DogAnimation>();
+        Stop();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_state == State.Stop) return;
+        if (_state == State.Die) return;
         if (!_cursor.IsEnabled()) return;
+        if (_state == State.Stop && _cursor.IsEnabled()) Run();
+        if (_state != State.Run) return;
         Vector2 diff = _cursor.transform.position - transform.position;
         if (diff.magnitude < 0.1f)
         {
             _cursor.DisableMove();
+            Stop();
         }
         Vector3 direction = diff.normalized * speed;
         transform.Translate(direction);
     }
 
-    public void Stop()
+    public void Die()
+    {
+        _state = State.Die;
+        _dogAnimation.Stop();
+    }
+
+    private void Stop()
     {
         _state = State.Stop;
+        _dogAnimation.Stop();
+    }
+
+    private void Run()
+    {
+        _state = State.Run;
+        _dogAnimation.Run();
     }
 }

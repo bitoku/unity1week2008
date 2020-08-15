@@ -573,7 +573,7 @@ PrefabInstance:
     - target: {fileID: 2558041387485976296, guid: a1b114b72b2bc4b34a2424ef02400957,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2558041387485976296, guid: a1b114b72b2bc4b34a2424ef02400957,
         type: 3}
@@ -634,6 +634,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3225288015335102419, guid: 131e8f17be8754255a8309fde3674f6c,
+        type: 3}
+      propertyPath: m_Name
+      value: DogWithAnimation
+      objectReference: {fileID: 0}
     - target: {fileID: 3376149958541415578, guid: 131e8f17be8754255a8309fde3674f6c,
         type: 3}
       propertyPath: cursor
@@ -736,7 +741,7 @@ PrefabInstance:
     - target: {fileID: 4577882299008710122, guid: a4aadfe5bdb004f2ea891f14a5d7ec10,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4577882299008710122, guid: a4aadfe5bdb004f2ea891f14a5d7ec10,
         type: 3}
@@ -786,6 +791,11 @@ PrefabInstance:
     - target: {fileID: 4577882299489766514, guid: a4aadfe5bdb004f2ea891f14a5d7ec10,
         type: 3}
       propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4577882299489766515, guid: a4aadfe5bdb004f2ea891f14a5d7ec10,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

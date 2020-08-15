@@ -65,41 +65,4 @@ public class SheepAnimation : MonoBehaviour
             _sheepAnimator.SetInteger("SheepState", (int)SheepState.Walking);
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //端に行ったらStopする
-        /*if (Input.GetKey(KeyCode.S))
-        {
-            _sheepState = SheepState.Stop;
-            sheep_Animator.SetInteger("SheepState", (int)SheepState.Stop);
-
-            //犬が来たらWalkingしなおす
-            if (Input.GetKey(KeyCode.W))
-            {
-                _sheepState = SheepState.Walking;
-                sheep_Animator.SetInteger("SheepState", (int)SheepState.Walking);
-            }
-            //犬が来なかったらJumpする
-            else if (Input.GetKey(KeyCode.Space))
-            {
-                _sheepState = SheepState.Jump;
-                sheep_Animator.SetInteger("SheepState", (int)SheepState.Jump);
-                //_sheepState = SheepState.Stop;
-                //sheep_Animator.SetInteger("SheepState", (int)SheepState.Stop);
-            }
-            else
-            {
-                _sheepState = SheepState.Stop;
-                sheep_Animator.SetInteger("SheepState", (int)SheepState.Stop);
-            }
-        }*/
-        /*else
-        {
-            //基本的にはWalkingしてる
-            _sheepState = SheepState.Walking;
-            sheep_Animator.SetInteger("SheepState", (int)SheepState.Walking);
-        }*/
-    }
 }

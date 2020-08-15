@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         {
             sheep.GetComponent<SheepController>().Stop();
         }
-        _dogController.Stop();
+        _dogController.Die();
         
         SceneManager.sceneLoaded += SceneCallback;
         
