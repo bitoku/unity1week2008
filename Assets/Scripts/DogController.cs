@@ -40,6 +40,9 @@ public class DogController : MonoBehaviour
         }
         Vector3 direction = diff.normalized * speed;
         transform.Translate(direction);
+        var position = transform.position;
+        position.z = (position.y + 5) / 10;
+        transform.position = position;
     }
 
     public void Die()
