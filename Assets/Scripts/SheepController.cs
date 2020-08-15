@@ -73,9 +73,10 @@ public class SheepController : MonoBehaviour
 
     private void ChangeState()
     {
-        var distance = (_dog.transform.position - transform.position).magnitude;
+        var distance = ((Vector2)(_dog.transform.position - transform.position)).magnitude;
         if (_state == State.Stop && distance < 0.5f)
         {
+            Debug.Log("run");
             TransitionState(State.Run);
         }
         else if (_state == State.Run && transform.position.magnitude > 4.2f)
@@ -133,8 +134,8 @@ public class SheepController : MonoBehaviour
             {
                 _speed = maxSpeed;
                 
-                var vecFromDog = transform.position - _dog.transform.position;
-                _direction = (_direction + restitution * (Vector2) vecFromDog.normalized).normalized;
+                Vector2 vecFromDog = transform.position - _dog.transform.position;
+                _direction = (_direction + restitution * vecFromDog.normalized).normalized;
                 break;
             }
             case State.Free:
@@ -154,7 +155,7 @@ public class SheepController : MonoBehaviour
             case State.Run:
             {
                 _speed = maxSpeed;
-                _direction = (-transform.position).normalized;
+                _direction = (-(Vector2)transform.position).normalized;
                 break;
             }
             default:
