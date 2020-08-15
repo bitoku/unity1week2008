@@ -27,6 +27,7 @@ public class SheepController : MonoBehaviour
     private const float JumpSpeed = 0.01f;
     private float _fieldRadius;
     private Transform _rotatingSheep;
+    [SerializeField] private GameObject sheepFall;
     [SerializeField] private State state;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
@@ -147,6 +148,12 @@ public class SheepController : MonoBehaviour
                 {
                     _sheepAnimation.JumpAnimation();
                     StartCoroutine(_gameManager.GameOver());
+                }
+                break;
+            case State.Rotate:
+                if (fromState != State.Rotate)
+                {
+                    Instantiate(sheepFall);
                 }
                 break;
             default:
