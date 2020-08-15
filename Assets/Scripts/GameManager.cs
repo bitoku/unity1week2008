@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private List<GameObject> _sheep;
     private SheepFactory _sheepFactory;
     private DogController _dogController;
+    private BGMController _bgmController;
     private float _elapsedTime;
     private const int ScoreInterval = 1;
     private bool _isPlaying;
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
         _sheep = new List<GameObject>();
         _sheepFactory = FindObjectOfType<SheepFactory>();
         _dogController = FindObjectOfType<DogController>();
+        _bgmController = FindObjectOfType<BGMController>();
         _score = 0;
         _isPlaying = true;
     }
@@ -58,9 +60,10 @@ public class GameManager : MonoBehaviour
     {
         _sheepFactory.StopFactory();
         _isPlaying = false;
+        _bgmController.Stop();
         foreach (var sheep in _sheep)
         {
-            sheep.GetComponent<SheepController>().Stop();
+            sheep.GetComponent<SheepController>().Die();
         }
         _dogController.Die();
         
