@@ -26,6 +26,7 @@ public class SheepController : MonoBehaviour
     private SheepAnimation _sheepAnimation;
     private const float JumpSpeed = 0.01f;
     private float _fieldRadius;
+    private Transform _rotatingSheep;
     [SerializeField] private State state;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
@@ -45,6 +46,7 @@ public class SheepController : MonoBehaviour
         _sheepAnimation = sheepWithAnimation.GetComponent<SheepAnimation>();
         var field = GameObject.Find("FieldCircle");
         _fieldRadius = field.GetComponent<SpriteRenderer>().bounds.size.x / 2;
+        _rotatingSheep = transform.Find("SheepWithAnimation");
     }
 
     // Update is called once per frame
@@ -103,7 +105,7 @@ public class SheepController : MonoBehaviour
             case State.Die:
                 break;
             case State.Jump:
-                if (distanceFromZero > _fieldRadius * 1.05f)
+                if (distanceFromZero > _fieldRadius * 1.07f)
                 {
                     TransitionState(State.Rotate);
                 }
@@ -192,8 +194,8 @@ public class SheepController : MonoBehaviour
             }
             case State.Rotate:
             {
-                transform.Rotate(new Vector3(0, 0, 1), 5);
-                transform.localScale *= 0.99f;
+                _rotatingSheep.Rotate(new Vector3(0, 0, 1), 5);
+                _rotatingSheep.localScale *= 0.99f;
                 return;
             }
             default:
