@@ -67,6 +67,8 @@ public class SheepController : MonoBehaviour
         ChangeMoveParams();
         CountDieTimer();
         transform.Translate(_direction * _speed);
+        var position = transform.position;
+        transform.position = new Vector3(position.x, position.y, (transform.position.y + 5) / 10);
     }
 
     private void ChangeState()
