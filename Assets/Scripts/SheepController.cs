@@ -65,6 +65,18 @@ public class SheepController : MonoBehaviour
         CountBornTimer();
         var position = transform.position;
         transform.position = new Vector3(position.x, position.y, (transform.position.y + 5) / 10);
+
+        Vector3 scale = transform.localScale;
+        if (0 >= _direction.x)
+        {
+            scale.x = 1;
+            transform.localScale = scale;
+        }
+        else if (0 < _direction.x)
+        {
+            scale.x = -1;
+            transform.localScale = scale;
+        }
     }
 
     private void ChangeState()
