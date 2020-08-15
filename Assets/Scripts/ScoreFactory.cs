@@ -27,11 +27,11 @@ public class ScoreFactory : MonoBehaviour
             var scoreText = (GameObject) Instantiate(scoreTextPrefab, _canvas.transform);
             if (_scoreMessages.Count % 2 == 1)
             {
-                scoreText.transform.position = new Vector3(Screen.width / 2, 72 * (_scoreMessages.Count + 1) / 2 + Screen.height / 2 - 72 * (i + 2), 0);
+                scoreText.transform.position = new Vector3(Screen.width + 100, 72 * (_scoreMessages.Count + 1) / 2 + Screen.height / 2 - 72 * (i + 2), 0);
             }
             else
             {
-                scoreText.transform.position = new Vector3(Screen.width / 2, 72 * (_scoreMessages.Count + 2) / 2 - (36 + 72 * (i + 2)) + Screen.height / 2, 0);
+                scoreText.transform.position = new Vector3(Screen.width + 100, 72 * (_scoreMessages.Count + 2) / 2 - (36 + 72 * (i + 2)) + Screen.height / 2, 0);
             }
             //scoreText.transform.position = new Vector3(Screen.width /2, Screen.height /2 - 36 * (i-1), 0);
             scoreText.GetComponent<Text>().text = _scoreMessages[i];

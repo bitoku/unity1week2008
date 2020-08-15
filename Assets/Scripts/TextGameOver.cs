@@ -13,11 +13,11 @@ public class TextGameOver : MonoBehaviour
         var scoreMessagesCount = _scoreFactory.ScoreMessagesCount();
         if(scoreMessagesCount % 2 == 1)
         {
-            this.gameObject.transform.position = new Vector3(Screen.width / 2, 72 * (scoreMessagesCount + 1) /2 + Screen.height / 2, 0);
+            gameObject.transform.position = new Vector3(Screen.width / 2, 72 * (scoreMessagesCount + 1) /2 + Screen.height / 2, 0);
         }
         else
         {
-            this.gameObject.transform.position = new Vector3(Screen.width / 2, 72 * (scoreMessagesCount + 2) / 2 - 36 + Screen.height / 2, 0);
+            gameObject.transform.position = new Vector3(Screen.width / 2, 72 * (scoreMessagesCount + 2) / 2 - 36 + Screen.height / 2, 0);
         }
     }
 
