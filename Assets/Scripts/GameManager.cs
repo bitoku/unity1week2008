@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
     private void SceneCallback(Scene next, LoadSceneMode mode)
     {
         var scoreFactory = FindObjectOfType<ScoreFactory>();
-        scoreFactory.SetScore("スコア", GetScore());
+        scoreFactory.SetScore(GetScore());
 
         SceneManager.sceneLoaded -= SceneCallback;
     }
