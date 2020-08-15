@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class SheepController : MonoBehaviour
@@ -20,11 +21,12 @@ public class SheepController : MonoBehaviour
     private Vector2 _direction;
     private DogController _dog;
     private GameManager _gameManager;
-    private State _state;
     private float _speed;
     private float _dieTimer;
     private SheepAnimation _sheepAnimation;
     private const float JumpSpeed = 0.01f;
+    private float _fieldRadius;
+    [SerializeField] private State state;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float changeDirectionRate;
@@ -38,35 +40,20 @@ public class SheepController : MonoBehaviour
         _speed = minSpeed;
         _dog = FindObjectOfType<DogController>();
         _gameManager = FindObjectOfType<GameManager>();
-        _state = State.Free;
+        state = State.Free;
         var sheepWithAnimation = gameObject.transform.Find("SheepWithAnimation");
         _sheepAnimation = sheepWithAnimation.GetComponent<SheepAnimation>();
+        var field = GameObject.Find("FieldCircle");
+        _fieldRadius = field.GetComponent<SpriteRenderer>().bounds.size.x / 2;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_state == State.Rotate)
-        {
-            transform.Rotate(new Vector3(0, 0, 1), 5);
-            transform.localScale *= 0.99f;
-            return;
-        }
-        if (_state == State.Jump)
-        {
-            _direction = ((Vector2) transform.position).normalized;
-            transform.Translate(_direction * JumpSpeed);
-            if (transform.position.magnitude > 6f)
-            {
-                TransitionState(State.Rotate);
-            }
-            return;
-        }
-        if (_state == State.Die) return;
+        if (state == State.Die) return;
         ChangeState();
-        ChangeMoveParams();
+        Move();
         CountDieTimer();
-        transform.Translate(_direction * _speed);
         var position = transform.position;
         transform.position = new Vector3(position.x, position.y, (transform.position.y + 5) / 10);
     }
@@ -74,34 +61,65 @@ public class SheepController : MonoBehaviour
     private void ChangeState()
     {
         var distance = ((Vector2)(_dog.transform.position - transform.position)).magnitude;
-        if (_state == State.Stop && distance < 0.5f)
+        var distanceFromZero = ((Vector2) transform.position).magnitude;
+        switch (state)
         {
-            Debug.Log("run");
-            TransitionState(State.Run);
-        }
-        else if (_state == State.Run && transform.position.magnitude > 4.2f)
-        {
-            return;
-        }
-        else if (transform.position.magnitude > 4.9f)
-        {
-            TransitionState(State.Stop);
-        }
-        else if (distance < 1.5f)
-        {
-            TransitionState(State.Chased);
-        }
-        else if (distance > 2f)
-        {
-            TransitionState(State.Free);
+            case State.Free: 
+                if (distanceFromZero > _fieldRadius * 0.98f)
+                {
+                    TransitionState(State.Stop);
+                }
+                else if (distance < _fieldRadius * 0.5f)
+                {
+                    TransitionState(State.Chased);
+                }
+                break;
+            case State.Chased:
+                if (distanceFromZero > _fieldRadius * 0.98f)
+                {
+                    TransitionState(State.Stop);
+                }
+                else if (distance > _fieldRadius * 0.7f)
+                {
+                    TransitionState(State.Free);
+                }
+                break;
+            case State.Stop:
+                if (_dieTimer > dieTime)
+                {
+                    TransitionState(State.Jump);
+                } 
+                else if (distance < _fieldRadius * 0.2f)
+                {
+                    TransitionState(State.Run);
+                }
+                break;
+            case State.Run:
+                if (distanceFromZero < _fieldRadius * 0.95f)
+                {
+                    TransitionState(State.Free);
+                }
+                break;
+            case State.Die:
+                break;
+            case State.Jump:
+                if (distanceFromZero > _fieldRadius * 1.05f)
+                {
+                    TransitionState(State.Rotate);
+                }
+                break;
+            case State.Rotate:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
     private void TransitionState(State toState)
     {
-        var fromState = _state;
-        _state = toState;
-        switch (_state)
+        var fromState = state;
+        state = toState;
+        switch (state)
         {
             case State.Free:
                 break;
@@ -115,20 +133,28 @@ public class SheepController : MonoBehaviour
                 }
                 break;
             case State.Run:
-                if (fromState != State.Run) _sheepAnimation.WalkingAnimation();
+                if (fromState != State.Run)
+                {
+                    _sheepAnimation.WalkingAnimation();
+                }
                 break;
             case State.Die:
                 break;
             case State.Jump:
+                if (fromState != State.Jump)
+                {
+                    _sheepAnimation.JumpAnimation();
+                    _gameManager.GameOver();
+                }
                 break;
             default:
                 break;
         }
     }
 
-    private void ChangeMoveParams()
+    private void Move()
     {
-        switch (_state)
+        switch (state)
         {
             case State.Chased:
             {
@@ -158,28 +184,32 @@ public class SheepController : MonoBehaviour
                 _direction = (-(Vector2)transform.position).normalized;
                 break;
             }
+            case State.Jump:
+            {
+                _direction = ((Vector2) transform.position).normalized;
+                _speed = JumpSpeed;
+                break;
+            }
+            case State.Rotate:
+            {
+                transform.Rotate(new Vector3(0, 0, 1), 5);
+                transform.localScale *= 0.99f;
+                return;
+            }
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        transform.Translate(_direction * _speed);
     }
 
     private void CountDieTimer()
     {
-        if (_state != State.Stop) return;
+        if (state != State.Stop) return;
         _dieTimer += Time.deltaTime;
-        if (_dieTimer < dieTime) return;
-        Jump();
     }
 
-    private void Jump()
+    public void Die()
     {
-        _sheepAnimation.JumpAnimation();
-        TransitionState(State.Jump);
-        _gameManager.GameOver();
-    }
-
-    public void Stop()
-    {
-        if (_state != State.Jump) TransitionState(State.Die);
+        if (state != State.Jump) TransitionState(State.Die);
     }
 }

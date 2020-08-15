@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         _isPlaying = false;
         foreach (var sheep in _sheep)
         {
-            sheep.GetComponent<SheepController>().Stop();
+            sheep.GetComponent<SheepController>().Die();
         }
         _dogController.Die();
         
