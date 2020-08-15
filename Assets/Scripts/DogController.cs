@@ -43,6 +43,17 @@ public class DogController : MonoBehaviour
         var position = transform.position;
         position.z = (position.y + 5) / 10;
         transform.position = position;
+        Vector3 scale = transform.localScale;
+        if (0 >= diff.x)
+        {
+            scale.x = 1;
+            transform.localScale = scale;
+        }
+        else if (0 < diff.x)
+        {
+            scale.x = -1;
+            transform.localScale = scale;
+        }
     }
 
     public void Die()
