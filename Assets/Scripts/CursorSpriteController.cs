@@ -8,7 +8,7 @@ public class CursorSpriteController : MonoBehaviour
     private Material _material;
     private Vector3 _defaultScale;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         var spriteRenderer = GetComponent<SpriteRenderer>();
         _material = spriteRenderer.material;
