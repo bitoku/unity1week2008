@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         return _isPlaying;
     }
     
-    public async void GameOver()
+    public IEnumerator GameOver()
     {
         _sheepFactory.StopFactory();
         _isPlaying = false;
@@ -68,8 +68,9 @@ public class GameManager : MonoBehaviour
         _dogController.Die();
         
         SceneManager.sceneLoaded += SceneCallback;
-        
-        await Task.Delay(3000);
+
+        yield return new WaitForSeconds(3);  // 3秒待つ
+
         SceneManager.LoadScene("GameOverScene");
     }
 

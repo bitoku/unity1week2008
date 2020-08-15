@@ -5,7 +5,7 @@ using UnityEngine;
 public class DogAnimation : MonoBehaviour
 {
     private Animator _animator;
-    void Start()
+    void Awake()
     {
         _animator = GetComponent<Animator>();
     }

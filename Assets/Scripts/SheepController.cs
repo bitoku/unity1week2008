@@ -146,7 +146,7 @@ public class SheepController : MonoBehaviour
                 if (fromState != State.Jump)
                 {
                     _sheepAnimation.JumpAnimation();
-                    _gameManager.GameOver();
+                    StartCoroutine(_gameManager.GameOver());
                 }
                 break;
             default:

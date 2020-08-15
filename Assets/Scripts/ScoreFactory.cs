@@ -15,15 +15,20 @@ public class ScoreFactory : MonoBehaviour
         _canvas = GameObject.Find("Canvas");
         _scoreMessages = new List<string>();
         // テスト用
-        //_scoreMessages = new List<string> {"aaaaa", "bbbbb", "ccccc"};
+        // _scoreMessages = new List<string> {"aaaaa", "bbbbb", "ccccc"};
     }
 
-    async void Start()
+    void Start()
+    {
+        StartCoroutine(CreateText());
+    }
+
+    IEnumerator CreateText()
     {
         var scoreTextPrefab = Resources.Load("ScoreText");
         for (var i = 0; i < _scoreMessages.Count; i++)
         {
-            await Task.Delay(500);
+            yield return new WaitForSeconds(0.5f);
             var scoreText = (GameObject) Instantiate(scoreTextPrefab, _canvas.transform);
             if (_scoreMessages.Count % 2 == 1)
             {
