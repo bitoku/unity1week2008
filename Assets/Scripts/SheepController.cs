@@ -9,6 +9,7 @@ public class SheepController : MonoBehaviour
 {
     private enum State
     {
+        Born,
         Free,
         Chased,
         Stop,
@@ -27,6 +28,7 @@ public class SheepController : MonoBehaviour
     private const float JumpSpeed = 0.01f;
     private float _fieldRadius;
     private Transform _rotatingSheep;
+    private float _bornTimer;
     [SerializeField] private GameObject sheepFall;
     [SerializeField] private State state;
     [SerializeField] private float minSpeed;
@@ -35,6 +37,7 @@ public class SheepController : MonoBehaviour
     [SerializeField] private float changeSpeedRate;
     [SerializeField] private float restitution;
     [SerializeField] private float dieTime;
+    [SerializeField] private float bornTime;
 
     void Start()
     {
@@ -42,7 +45,9 @@ public class SheepController : MonoBehaviour
         _speed = minSpeed;
         _dog = FindObjectOfType<DogController>();
         _gameManager = FindObjectOfType<GameManager>();
-        state = State.Free;
+        state = State.Born;
+        _bornTimer = 0;
+        transform.localScale = Vector3.zero;
         var sheepWithAnimation = gameObject.transform.Find("SheepWithAnimation");
         _sheepAnimation = sheepWithAnimation.GetComponent<SheepAnimation>();
         var field = GameObject.Find("FieldCircle");
@@ -57,6 +62,7 @@ public class SheepController : MonoBehaviour
         ChangeState();
         Move();
         CountDieTimer();
+        CountBornTimer();
         var position = transform.position;
         transform.position = new Vector3(position.x, position.y, (transform.position.y + 5) / 10);
     }
@@ -67,6 +73,13 @@ public class SheepController : MonoBehaviour
         var distanceFromZero = ((Vector2) transform.position).magnitude;
         switch (state)
         {
+            case State.Born:
+                if (_bornTimer > bornTime)
+                {
+                    TransitionState(State.Free);
+                }
+
+                break;
             case State.Free: 
                 if (distanceFromZero > _fieldRadius * 0.98f)
                 {
@@ -125,6 +138,10 @@ public class SheepController : MonoBehaviour
         switch (state)
         {
             case State.Free:
+                if (fromState == State.Born)
+                {
+                    transform.localScale = Vector3.one;
+                }
                 break;
             case State.Chased:
                 break;
@@ -165,6 +182,11 @@ public class SheepController : MonoBehaviour
     {
         switch (state)
         {
+            case State.Born:
+            {
+                transform.localScale = Vector3.one * (_bornTimer / bornTime);
+                break;
+            }
             case State.Chased:
             {
                 _speed = maxSpeed;
@@ -215,6 +237,12 @@ public class SheepController : MonoBehaviour
     {
         if (state != State.Stop) return;
         _dieTimer += Time.deltaTime;
+    }
+
+    private void CountBornTimer()
+    {
+        if (state != State.Born) return;
+        _bornTimer += Time.deltaTime;
     }
 
     public void Die()
