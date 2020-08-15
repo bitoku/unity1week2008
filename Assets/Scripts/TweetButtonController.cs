@@ -12,7 +12,10 @@ public class TweetButtonController : MonoBehaviour
         var scores = scoreFactory.GetScores();
         var score = scores.Count != 0 ? scores[0] : 0; 
         //urlの作成
-        var escText = UnityWebRequest.EscapeURL($"めぇちゃんを必死に守り抜いて {score} 点獲得しました！");
+        var escText = UnityWebRequest.EscapeURL(
+            $"めぇちゃんを必死に守り抜いて {score} 点獲得しました！\n" +
+            "https://unityroom.com/games/straysheep"
+            );
         var escTag = UnityWebRequest.EscapeURL("unity1week");
         var url = $"https://twitter.com/intent/tweet?text={escText}&hashtags={escTag}";
 
