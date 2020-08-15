@@ -9,11 +9,14 @@ public class ScoreFactory : MonoBehaviour
     private float _elapsedTime;
     private GameObject _canvas;
     private List<string> _scoreMessages;
+    private RestartButtonController _restartButtonController;
 
     void Awake()
     {
         _canvas = GameObject.Find("Canvas");
         _scoreMessages = new List<string>();
+        _restartButtonController = FindObjectOfType<RestartButtonController>();
+        _restartButtonController.gameObject.SetActive(false);
         // テスト用
         // _scoreMessages = new List<string> {"aaaaa", "bbbbb", "ccccc"};
     }
@@ -21,9 +24,10 @@ public class ScoreFactory : MonoBehaviour
     void Start()
     {
         StartCoroutine(CreateText());
+        StartCoroutine(CreateButton());
     }
 
-    IEnumerator CreateText()
+    private IEnumerator CreateText()
     {
         var scoreTextPrefab = Resources.Load("ScoreText");
         for (var i = 0; i < _scoreMessages.Count; i++)
@@ -38,9 +42,14 @@ public class ScoreFactory : MonoBehaviour
             {
                 scoreText.transform.position = new Vector3(Screen.width + 100, 72 * (_scoreMessages.Count + 2) / 2 - (36 + 72 * (i + 2)) + Screen.height / 2, 0);
             }
-            //scoreText.transform.position = new Vector3(Screen.width /2, Screen.height /2 - 36 * (i-1), 0);
             scoreText.GetComponent<Text>().text = _scoreMessages[i];
         }
+    }
+
+    private IEnumerator CreateButton()
+    {
+        yield return new WaitForSeconds(2f);
+        _restartButtonController.gameObject.SetActive(true);
     }
 
     public int ScoreMessagesCount()
