@@ -25,10 +25,11 @@ public class InGameScoreController : MonoBehaviour
 
     private void DisplayScore(int sheepNumber, int score)
     {
-        if (score > _displayedScore && _elapsedTimeAfterChange > 0.03f)
+        var restScore = score - _displayedScore;
+        if (restScore > 0 && _elapsedTimeAfterChange > Math.Pow(2, -restScore))
         {
             _elapsedTimeAfterChange = 0;
-            _displayedScore += 1;
+            _displayedScore += Math.Max(restScore / 30, 1);
             _text.text = $"ヒツジ: {sheepNumber}\nスコア: {_displayedScore}";
         }
         else
