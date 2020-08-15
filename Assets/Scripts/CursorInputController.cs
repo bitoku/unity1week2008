@@ -25,7 +25,7 @@ public class CursorInputController : MonoBehaviour
         EnableMove();
         var screenPos = TouchPos();
         var worldPos = _camera.ScreenToWorldPoint((Vector3) screenPos);
-        worldPos.z = 0;
+        worldPos.z = (worldPos.y + 5) / 10;
         transform.position = worldPos;
     }
 
@@ -78,7 +78,7 @@ public class CursorInputController : MonoBehaviour
     {
         var material = _spriteRenderer.material;
         var c = material.color;
-        c.a = 1f;
+        c.a = 0.5f;
         material.color = c;
     }
 }
