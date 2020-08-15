@@ -7,14 +7,13 @@ public class CursorInputController : MonoBehaviour
 {
     private Camera _camera;
     private bool _enable;
-    private SpriteRenderer _spriteRenderer;
+    private CursorSpriteController _cursorSpriteController;
     
     // Start is called before the first frame update
     void Start()
     {
         _camera = Camera.main;
-        var circle = GameObject.Find("CursorCircle");
-        _spriteRenderer = circle.GetComponent<SpriteRenderer>();
+        _cursorSpriteController = FindObjectOfType<CursorSpriteController>();
         DisableMove();
     }
 
@@ -25,7 +24,7 @@ public class CursorInputController : MonoBehaviour
         EnableMove();
         var screenPos = TouchPos();
         var worldPos = _camera.ScreenToWorldPoint((Vector3) screenPos);
-        worldPos.z = 0;
+        worldPos.z = 10;
         transform.position = worldPos;
     }
 
@@ -52,33 +51,17 @@ public class CursorInputController : MonoBehaviour
     void EnableMove()
     {
         _enable = true;
-        Intransparency();
+        _cursorSpriteController.Intransparency();
     }
 
     public void DisableMove()
     {
         _enable = false;
-        Transparency();
+        _cursorSpriteController.Transparency();
     }
 
     public bool IsEnabled()
     {
         return _enable;
-    }
-
-    private void Transparency()
-    {
-        var material = _spriteRenderer.material;
-        var c = material.color;
-        c.a = 0f;
-        material.color = c;
-    }
-
-    private void Intransparency()
-    {
-        var material = _spriteRenderer.material;
-        var c = material.color;
-        c.a = 1f;
-        material.color = c;
     }
 }

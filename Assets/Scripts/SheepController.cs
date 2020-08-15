@@ -24,7 +24,7 @@ public class SheepController : MonoBehaviour
     private float _speed;
     private float _dieTimer;
     private SheepAnimation _sheepAnimation;
-    private const float JumpSpeed = 0.003f;
+    private const float JumpSpeed = 0.01f;
     [SerializeField] private float minSpeed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float changeDirectionRate;
@@ -46,6 +46,12 @@ public class SheepController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_state == State.Rotate)
+        {
+            transform.Rotate(new Vector3(0, 0, 1), 5);
+            transform.localScale *= 0.99f;
+            return;
+        }
         if (_state == State.Jump)
         {
             _direction = ((Vector2) transform.position).normalized;
@@ -61,13 +67,16 @@ public class SheepController : MonoBehaviour
         ChangeMoveParams();
         CountDieTimer();
         transform.Translate(_direction * _speed);
+        var position = transform.position;
+        transform.position = new Vector3(position.x, position.y, (transform.position.y + 5) / 10);
     }
 
     private void ChangeState()
     {
-        var distance = (_dog.transform.position - transform.position).magnitude;
+        var distance = ((Vector2)(_dog.transform.position - transform.position)).magnitude;
         if (_state == State.Stop && distance < 0.5f)
         {
+            Debug.Log("run");
             TransitionState(State.Run);
         }
         else if (_state == State.Run && transform.position.magnitude > 4.2f)
@@ -78,7 +87,7 @@ public class SheepController : MonoBehaviour
         {
             TransitionState(State.Stop);
         }
-        else if (distance < 1f)
+        else if (distance < 1.5f)
         {
             TransitionState(State.Chased);
         }
@@ -125,8 +134,8 @@ public class SheepController : MonoBehaviour
             {
                 _speed = maxSpeed;
                 
-                var vecFromDog = transform.position - _dog.transform.position;
-                _direction = (_direction + restitution * (Vector2) vecFromDog.normalized).normalized;
+                Vector2 vecFromDog = transform.position - _dog.transform.position;
+                _direction = (_direction + restitution * vecFromDog.normalized).normalized;
                 break;
             }
             case State.Free:
@@ -146,7 +155,7 @@ public class SheepController : MonoBehaviour
             case State.Run:
             {
                 _speed = maxSpeed;
-                _direction = (-transform.position).normalized;
+                _direction = (-(Vector2)transform.position).normalized;
                 break;
             }
             default:

@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private int _score;
     private List<GameObject> _sheep;
     private SheepFactory _sheepFactory;
+    private DogController _dogController;
     private float _elapsedTime;
     private const int ScoreInterval = 1;
     private bool _isPlaying;
@@ -17,6 +20,7 @@ public class GameManager : MonoBehaviour
     {
         _sheep = new List<GameObject>();
         _sheepFactory = FindObjectOfType<SheepFactory>();
+        _dogController = FindObjectOfType<DogController>();
         _score = 0;
         _isPlaying = true;
     }
@@ -50,7 +54,7 @@ public class GameManager : MonoBehaviour
         return _isPlaying;
     }
     
-    public void GameOver()
+    public async void GameOver()
     {
         _sheepFactory.StopFactory();
         _isPlaying = false;
@@ -58,5 +62,19 @@ public class GameManager : MonoBehaviour
         {
             sheep.GetComponent<SheepController>().Stop();
         }
+        _dogController.Stop();
+        
+        SceneManager.sceneLoaded += SceneCallback;
+        
+        await Task.Delay(3000);
+        SceneManager.LoadScene("GameOverScene");
+    }
+
+    private void SceneCallback(Scene next, LoadSceneMode mode)
+    {
+        var scoreFactory = FindObjectOfType<ScoreFactory>();
+        scoreFactory.SetScore("スコア", GetScore());
+
+        SceneManager.sceneLoaded -= SceneCallback;
     }
 }
